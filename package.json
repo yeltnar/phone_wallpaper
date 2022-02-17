@@ -1,0 +1,22 @@
+{
+  "name": "phone_wallpaper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yeltnar/phone_wallpaper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yeltnar/phone_wallpaper/issues"
+  },
+  "homepage": "https://github.com/yeltnar/phone_wallpaper#readme",
+  "dependencies": {
+    "request-promise-native": "^1.0.9"
+  }
+}
