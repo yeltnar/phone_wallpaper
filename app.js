@@ -1,5 +1,6 @@
-const requestP = require("request-promise-native");
-const {sendJoinMessage} = require('./join/join');
+const axios = require("axios");
+// const {sendJoinMessage} = require('./join/join');
+const {execSync} = require('child_process');
 
 const join_api_key = process.env.JOIN_API_KEY;
 
@@ -12,9 +13,16 @@ async function getRedditPosts({sub,sort,count,time}={}){
 
     const reddit_url = `https://www.reddit.com/r/${sub}/${sort}.json?count=${count}&t=${time}`;
     console.log(JSON.stringify({reddit_url}));
-    let result = await requestP(reddit_url);
-    result = JSON.parse(result);
-    return result.data.children;
+
+    const config = {
+        headers:{
+            'User-Agent':'Mozilla/5.0' // lol yeah
+        }
+    };
+    // https://www.reddit.com/r/earthporn/top.json?count=20&t=day
+    let result = await axios(reddit_url,undefined,config);
+
+    return result.data.data.children;
 }
 
 async function getNewRedditPost(){
@@ -85,10 +93,17 @@ async function callJoinSetWallpaper( img_url ){
     });
 }
 
+async function termuxSetWallpaper( img_url ){
+    execSync(`termux-wallpaper -l -u ${img_url}`);
+    execSync(`termux-wallpaper -u ${img_url}`);
+    // execSync(`termux-download -p ~/wallpaper/ ${img_url}`);
+}
+
 (async function main(){
     const reddit_post = await getNewRedditPost()
     const reddit_image = getRedditImage(reddit_post);
-    callJoinSetWallpaper(reddit_image);
+    // callJoinSetWallpaper(reddit_image);
+    termuxSetWallpaper( reddit_image );
     
     console.log(reddit_image);
 })()
