@@ -12,7 +12,7 @@ async function getRedditPosts({sub,sort,count,time}={}){
     time = time!==undefined ? time : "day";
 
     const reddit_url = `https://www.reddit.com/r/${sub}/${sort}.json?count=${count}&t=${time}`;
-    console.log(JSON.stringify({reddit_url}));
+    console.error(JSON.stringify({reddit_url}));
 
     const config = {
         headers:{
@@ -43,8 +43,8 @@ async function getNewRedditPost(){
 
     const index = parseInt(Math.random()*reddit_posts.length);
 
-    console.log(`reddit_posts.length=${JSON.stringify(reddit_posts.length)}`)
-    console.log(`index=${index}`)
+    console.error(`reddit_posts.length=${JSON.stringify(reddit_posts.length)}`)
+    console.error(`index=${index}`)
     
     return reddit_posts[index] || "undefined";
 }
@@ -57,12 +57,12 @@ function getRedditImage( reddit_post ){
         throw new Error("reddit_post can not be undefined");
     }else if( typeof reddit_post === "object" ){
         toReturn = reddit_post.data.url;
-        console.log("got reddit post object");
+        console.error("got reddit post object");
     }else{
         throw new Error("getRedditImage can not handle post links yet");
         // const post_obj = getRedditPostFromUrl(reddit_post);
         // toReturn = getRedditImage( post_obj );
-        // console.log("got reddit post url");
+        // console.error("got reddit post url");
     }
 
     return toReturn;
@@ -94,16 +94,29 @@ async function callJoinSetWallpaper( img_url ){
 }
 
 async function termuxSetWallpaper( img_url ){
-    execSync(`termux-wallpaper -l -u ${img_url}`);
-    execSync(`termux-wallpaper -u ${img_url}`);
+    console.error( `termux-wallpaper ${img_url}` )
+    execSync(`termux-wallpaper -l -f ${img_url}`);
+    execSync(`termux-wallpaper -f ${img_url}`);
     // execSync(`termux-download -p ~/wallpaper/ ${img_url}`);
+}
+
+async function downloadWallpaper( wallpaper_file, reddit_image ){
+    execSync(`curl -o ${wallpaper_file} ${reddit_image}`);
+}
+
+async function convertWallpaper( wallpaper_file, wallpaper_final ){
+    execSync(`ffmpeg -y -i ${wallpaper_file}  -vf scale=-1:1080 ${wallpaper_final}`);
 }
 
 (async function main(){
     const reddit_post = await getNewRedditPost()
     const reddit_image = getRedditImage(reddit_post);
+    const wallpaper_file = '/sdcard/wallpaper_in.jpg';
+    const wallpaper_final = '/sdcard/wallpaper.jpg';
+    downloadWallpaper( wallpaper_file, reddit_image );
+    convertWallpaper( wallpaper_file, wallpaper_final )
     // callJoinSetWallpaper(reddit_image);
-    termuxSetWallpaper( reddit_image );
+    termuxSetWallpaper( wallpaper_final );
     
-    console.log(reddit_image);
+    console.log({reddit_image});
 })()
