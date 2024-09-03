@@ -116,7 +116,7 @@ async function convertWallpaper( wallpaper_file, wallpaper_final ){
     downloadWallpaper( wallpaper_file, reddit_image );
     convertWallpaper( wallpaper_file, wallpaper_final )
     // callJoinSetWallpaper(reddit_image);
-    termuxSetWallpaper( wallpaper_final );
+    // termuxSetWallpaper( wallpaper_final );
     
     console.log({reddit_image});
 })()
