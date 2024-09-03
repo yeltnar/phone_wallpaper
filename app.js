@@ -108,13 +108,25 @@ async function convertWallpaper( wallpaper_file, wallpaper_final ){
     execSync(`ffmpeg -y -i ${wallpaper_file}  -vf scale=-1:1080 ${wallpaper_final}`);
 }
 
+async function copyWallpaper( wallpaper_final, wallpaper_bk, wallpaper_bk_path ){
+    mkWallpaperDir( wallpaper_bk_path );
+    execSync(`cp ${wallpaper_final} ${wallpaper_bk}`);
+}
+
+function mkWallpaperDir( wallpaper_bk_path ){
+    execSync(`mkdir -p ${wallpaper_bk_path}`);
+}
+
 (async function main(){
     const reddit_post = await getNewRedditPost()
     const reddit_image = getRedditImage(reddit_post);
     const wallpaper_file = '/sdcard/wallpaper_in.jpg';
     const wallpaper_final = '/sdcard/wallpaper.jpg';
+    const wallpaper_bk_path = `/sdcard/wallpaper_bk`;
+    const wallpaper_bk = `${wallpaper_bk_path}/${new Date().getTime()}.jpg`;
     downloadWallpaper( wallpaper_file, reddit_image );
     convertWallpaper( wallpaper_file, wallpaper_final )
+    copyWallpaper( wallpaper_final, wallpaper_bk, wallpaper_bk_path )
     // callJoinSetWallpaper(reddit_image);
     // termuxSetWallpaper( wallpaper_final );
     
