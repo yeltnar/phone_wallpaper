@@ -126,7 +126,7 @@ function mkWallpaperDir( wallpaper_bk_path ){
     const wallpaper_bk = `${wallpaper_bk_path}/${new Date().getTime()}.jpg`;
     downloadWallpaper( wallpaper_file, reddit_image );
     convertWallpaper( wallpaper_file, wallpaper_final )
-    copyWallpaper( wallpaper_final, wallpaper_bk, wallpaper_bk_path )
+    copyWallpaper( wallpaper_file, wallpaper_bk, wallpaper_bk_path )
     // callJoinSetWallpaper(reddit_image);
     // termuxSetWallpaper( wallpaper_final );
     
