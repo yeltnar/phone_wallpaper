@@ -4,6 +4,8 @@ const {execSync} = require('child_process');
 
 const join_api_key = process.env.JOIN_API_KEY;
 
+const random_wallpaper_uri = "https://wallpaper.h.lan/wallpaper"
+
 async function getRedditPosts({sub,sort,count,time}={}){
 
     sub = sub!==undefined ? sub : "earthporn";
@@ -101,7 +103,7 @@ async function termuxSetWallpaper( img_url ){
 }
 
 async function downloadWallpaper( wallpaper_file, reddit_image ){
-    execSync(`curl -o ${wallpaper_file} ${reddit_image}`);
+    execSync(`curl -k -o ${wallpaper_file} ${reddit_image}`);
 }
 
 async function convertWallpaper( wallpaper_file, wallpaper_final ){
@@ -118,17 +120,18 @@ function mkWallpaperDir( wallpaper_bk_path ){
 }
 
 (async function main(){
-    const reddit_post = await getNewRedditPost()
-    const reddit_image = getRedditImage(reddit_post);
+    // const reddit_post = await getNewRedditPost()
+    // const reddit_image = getRedditImage(reddit_post);
     const wallpaper_file = '/sdcard/wallpaper_in.jpg';
     const wallpaper_final = '/sdcard/wallpaper.jpg';
     const wallpaper_bk_path = `/sdcard/wallpaper_bk`;
     const wallpaper_bk = `${wallpaper_bk_path}/${new Date().getTime()}.jpg`;
-    downloadWallpaper( wallpaper_file, reddit_image );
+    downloadWallpaper( wallpaper_file, random_wallpaper_uri );
     convertWallpaper( wallpaper_file, wallpaper_final )
     copyWallpaper( wallpaper_file, wallpaper_bk, wallpaper_bk_path )
     // callJoinSetWallpaper(reddit_image);
     // termuxSetWallpaper( wallpaper_final );
     
-    console.log({reddit_image});
+    // console.log({reddit_image});
+    console.log({"wallpaper_image":"a"});
 })()
